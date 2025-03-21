@@ -6,9 +6,20 @@ pipeline {
     }
     
     stages {
-        stage("Clone Code_1"){
+        stage("Clone Code_1") {
             steps {
                 git branch: 'main', url: 'https://github.com/Udhaya0095/tweet-trend-new.git'
+            }
+        }
+        
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    scannerHome = tool 'sonar-scanner' // Must match the name of an actual scanner installation directory on your Jenkins build agent
+                }
+                withSonarQubeEnv('sonarqube-server') { // If you have configured more than one global server connection, you can specify its name as configured in Jenkins
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
             }
         }
     }
